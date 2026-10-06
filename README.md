@@ -2,10 +2,6 @@
 
 > Astronomy Picture of the Day — uma aplicação web que apresenta diariamente a imagem astronômica publicada pela NASA.
 
-## 🚀 Demonstração
-
-🌐 **Acesse o projeto:** https://nasa-api.vercel.app
-
 ## 📖 Sobre o projeto
 
 O NASA APOD é uma aplicação web desenvolvida para consumir a API da NASA e apresentar a **Astronomy Picture of the Day (APOD)** em uma interface moderna, responsiva e inspirada no universo.
