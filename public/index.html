@@ -1,0 +1,294 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
+    <meta
+        name="description"
+        content="Descubra a imagem astronômica do dia publicada pela NASA."
+    >
+
+    <title>Cosmos — NASA APOD</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Space+Grotesk:wght@400;500;600;700&display=swap"
+        rel="stylesheet"
+    >
+
+    <link rel="stylesheet" href="./style.css">
+</head>
+
+<body>
+
+    <div class="stars"></div>
+
+    <header class="header">
+
+        <a href="/" class="logo">
+            <span class="logo-mark">✦</span>
+
+            <div>
+                <strong>COSMOS</strong>
+                <small>NASA APOD</small>
+            </div>
+        </a>
+
+        <div class="header-date">
+            <span id="currentDate">Carregando...</span>
+        </div>
+
+    </header>
+
+
+    <main>
+
+        <section class="hero">
+
+            <div class="hero-content">
+
+                <span class="eyebrow">
+                    ASTRONOMY PICTURE OF THE DAY
+                </span>
+
+                <h1 id="title">
+                    Explorando o universo...
+                </h1>
+
+                <div class="date">
+                    <span class="date-dot"></span>
+                    <span id="apodDate">--</span>
+                </div>
+
+                <p class="hero-description" id="shortDescription">
+                    Carregando a imagem astronômica do dia...
+                </p>
+
+                <div class="actions">
+
+                    <a
+                        id="originalLink"
+                        href="#"
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        class="button primary"
+                    >
+                        Ver na NASA
+                        <span>↗</span>
+                    </a>
+
+                    <button
+                        id="scrollButton"
+                        class="button secondary"
+                    >
+                        Descobrir mais
+                        <span>↓</span>
+                    </button>
+
+                </div>
+
+            </div>
+
+
+            <div class="hero-image-container">
+
+                <div class="image-glow"></div>
+
+                <div class="image-wrapper">
+
+                    <div id="loader" class="loader">
+                        <div class="spinner"></div>
+                        <span>Conectando à NASA...</span>
+                    </div>
+
+                    <img
+                        id="apodImage"
+                        src=""
+                        alt=""
+                        class="hero-image"
+                    >
+
+                    <div
+                        id="mediaNotice"
+                        class="media-notice"
+                        hidden
+                    >
+                        Este APOD é um vídeo.
+                    </div>
+
+                </div>
+
+                <div class="image-caption">
+
+                    <span>
+                        <span class="caption-icon">◎</span>
+                        IMAGEM DO DIA
+                    </span>
+
+                    <span id="credit">
+                        NASA
+                    </span>
+
+                </div>
+
+            </div>
+
+        </section>
+
+
+        <section id="details" class="details">
+
+            <div class="section-heading">
+
+                <span class="eyebrow">
+                    SOBRE A IMAGEM
+                </span>
+
+                <h2>
+                    Uma janela para o universo
+                </h2>
+
+            </div>
+
+
+            <div class="details-grid">
+
+                <article class="description-card">
+
+                    <div class="card-number">
+                        01
+                    </div>
+
+                    <h3>
+                        O que estamos vendo?
+                    </h3>
+
+                    <p id="explanation">
+                        Carregando descrição...
+                    </p>
+
+                </article>
+
+
+                <aside class="info-card">
+
+                    <div class="card-number">
+                        02
+                    </div>
+
+                    <h3>
+                        Informações
+                    </h3>
+
+                    <div class="info-list">
+
+                        <div class="info-item">
+                            <span>Data</span>
+                            <strong id="infoDate">--</strong>
+                        </div>
+
+                        <div class="info-item">
+                            <span>Crédito</span>
+                            <strong id="infoCredit">--</strong>
+                        </div>
+
+                        <div class="info-item">
+                            <span>Fonte</span>
+                            <strong>NASA / APOD</strong>
+                        </div>
+
+                    </div>
+
+                </aside>
+
+            </div>
+
+        </section>
+
+
+        <section class="quote-section">
+
+            <div class="quote-mark">“</div>
+
+            <blockquote id="quote">
+                O universo é muito maior do que conseguimos imaginar.
+            </blockquote>
+
+            <p>
+                A cada dia, uma nova descoberta.
+            </p>
+
+        </section>
+
+
+        <section class="about">
+
+            <div>
+
+                <span class="eyebrow">
+                    TODOS OS DIAS
+                </span>
+
+                <h2>
+                    O universo nunca para de surpreender.
+                </h2>
+
+            </div>
+
+            <p>
+                Este projeto utiliza os dados públicos da
+                <strong>NASA Astronomy Picture of the Day</strong>
+                para apresentar uma nova imagem astronômica todos os dias.
+            </p>
+
+        </section>
+
+    </main>
+
+
+    <footer class="footer">
+
+        <div class="footer-logo">
+            ✦ COSMOS
+        </div>
+
+        <p>
+            Dados fornecidos pela NASA Astronomy Picture of the Day.
+        </p>
+
+        <a
+            href="https://www.nasa.gov/"
+            target="_blank"
+            rel="noopener noreferrer"
+        >
+            NASA ↗
+        </a>
+
+    </footer>
+
+
+    <div id="error" class="error" hidden>
+        <div>
+            <strong>Não conseguimos alcançar o espaço.</strong>
+            <span>Tente atualizar a página novamente.</span>
+        </div>
+
+        <button onclick="loadAPOD()">
+            Tentar novamente
+        </button>
+    </div>
+
+
+    <script src="./script.js"></script>
+
+</body>
+
+</html>
