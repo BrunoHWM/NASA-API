@@ -1,6 +1,11 @@
-const titleElement = document.getElementById("title");
-const dateElement = document.getElementById("apodDate");
-const currentDateElement = document.getElementById("currentDate");
+const titleElement =
+    document.getElementById("title");
+
+const dateElement =
+    document.getElementById("apodDate");
+
+const currentDateElement =
+    document.getElementById("currentDate");
 
 const descriptionElement =
     document.getElementById("shortDescription");
@@ -35,20 +40,21 @@ const errorElement =
 const quoteElement =
     document.getElementById("quote");
 
+const scrollButton =
+    document.getElementById("scrollButton");
 
-// =====================================================
-// FORMATAR DATA
-// =====================================================
+
+/* =========================================================
+   DATA
+   ========================================================= */
 
 function formatDate(dateString) {
-
     if (!dateString) {
         return "--";
     }
 
-    const date = new Date(
-        `${dateString}T12:00:00`
-    );
+    const date =
+        new Date(`${dateString}T12:00:00`);
 
     return new Intl.DateTimeFormat(
         "pt-BR",
@@ -61,14 +67,7 @@ function formatDate(dateString) {
 }
 
 
-// =====================================================
-// DATA ATUAL
-// =====================================================
-
 function formatToday() {
-
-    const today = new Date();
-
     return new Intl.DateTimeFormat(
         "pt-BR",
         {
@@ -76,16 +75,15 @@ function formatToday() {
             month: "long",
             year: "numeric"
         }
-    ).format(today);
+    ).format(new Date());
 }
 
 
-// =====================================================
-// LIMPAR HTML DA DESCRIÇÃO DA NASA
-// =====================================================
+/* =========================================================
+   TEXTO
+   ========================================================= */
 
 function cleanHTML(html) {
-
     if (!html) {
         return "";
     }
@@ -99,79 +97,100 @@ function cleanHTML(html) {
             "text/html"
         );
 
-    return document.body.textContent
+    return (
+        document.body.textContent || ""
+    )
         .replace(/\s+/g, " ")
         .trim();
 }
 
 
-// =====================================================
-// CRIAR FRASE
-// =====================================================
-
-function createQuote(title) {
-
+function createQuote() {
     const quotes = [
+        "O universo continua escrevendo histórias que ainda estamos aprendendo a ler.",
 
-        `O universo continua escrevendo histórias que ainda estamos aprendendo a ler.`,
+        "Cada imagem do cosmos é um lembrete de que ainda há muito para descobrir.",
 
-        `Cada imagem do cosmos é um lembrete de que ainda há muito para descobrir.`,
+        "Olhar para o espaço é olhar para bilhões de anos de história.",
 
-        `Olhar para o espaço é olhar para bilhões de anos de história.`,
+        "Somos pequenos diante do universo, mas temos a capacidade de explorá-lo.",
 
-        `Somos pequenos diante do universo, mas temos a capacidade de explorá-lo.`,
+        "Todos os dias o universo revela um novo detalhe de sua imensidão.",
 
-        `Todos os dias o universo revela um novo detalhe de sua imensidão.`,
-
-        `Existe um universo inteiro esperando para ser descoberto.`
-
+        "Existe um universo inteiro esperando para ser descoberto."
     ];
 
     const randomIndex =
         Math.floor(
-            Math.random() * quotes.length
+            Math.random() *
+            quotes.length
         );
 
     return quotes[randomIndex];
 }
 
 
-// =====================================================
-// CARREGAR APOD
-// =====================================================
+/* =========================================================
+   ESTADO
+   ========================================================= */
+
+function setLoading(isLoading) {
+    loader.hidden = !isLoading;
+}
+
+
+function showError() {
+    setLoading(false);
+
+    errorElement.hidden = false;
+}
+
+
+function hideError() {
+    errorElement.hidden = true;
+}
+
+
+/* =========================================================
+   CARREGAR APOD
+   ========================================================= */
 
 async function loadAPOD() {
 
     try {
 
-        // Esconde mensagem de erro
-        errorElement.hidden = true;
+        hideError();
 
-        // Mostra carregamento
-        loader.hidden = false;
+        setLoading(true);
 
-        // Remove imagem anterior
+        mediaNotice.hidden = true;
+
         imageElement.classList.remove(
             "loaded"
         );
 
-        mediaNotice.hidden = true;
+        imageElement.removeAttribute(
+            "src"
+        );
 
 
-        // =================================================
-        // BUSCAR API
-        // =================================================
+        /* -----------------------------------------------
+           BUSCAR API
+        ------------------------------------------------ */
 
         const response =
-            await fetch("/api/apod");
+            await fetch(
+                "/api/apod",
+                {
+                    cache: "no-store"
+                }
+            );
 
 
         if (!response.ok) {
-
             throw new Error(
                 `Erro HTTP: ${response.status}`
             );
-
         }
 
 
@@ -179,19 +198,11 @@ async function loadAPOD() {
             await response.json();
 
 
-        console.log(
-            "Resposta da API:",
-            result
-        );
-
-
         if (!result.success) {
-
             throw new Error(
                 result.message ||
-                "Erro desconhecido na API."
+                "Erro desconhecido."
             );
-
         }
 
 
@@ -199,24 +210,18 @@ async function loadAPOD() {
             result.data;
 
 
-        console.log(
-            "Dados da NASA:",
-            data
-        );
-
-
-        // =================================================
-        // TÍTULO
-        // =================================================
+        /* -----------------------------------------------
+           TÍTULO
+        ------------------------------------------------ */
 
         titleElement.textContent =
             data.title ||
             "Imagem do dia";
 
 
-        // =================================================
-        // DATA
-        // =================================================
+        /* -----------------------------------------------
+           DATA
+        ------------------------------------------------ */
 
         if (data.date) {
 
@@ -228,119 +233,84 @@ async function loadAPOD() {
 
             infoDateElement.textContent =
                 formattedDate;
-
         }
 
 
-        // =================================================
-        // DESCRIÇÃO
-        // =================================================
+        /* -----------------------------------------------
+           DESCRIÇÃO
+        ------------------------------------------------ */
 
-        const originalExplanation =
-            data.explanation ||
-            "A NASA não forneceu uma descrição para esta publicação.";
-
-
-        /*
-         * A API da NASA pode enviar HTML dentro
-         * da propriedade "explanation".
-         *
-         * Exemplo:
-         *
-         * <strong>Explanation:</strong>
-         *
-         * Texto...
-         *
-         * <a href="...">NASA</a>
-         *
-         * Aqui transformamos tudo em texto limpo.
-         */
-
-        const cleanExplanation =
+        const explanation =
             cleanHTML(
-                originalExplanation
+                data.explanation ||
+                "A NASA não forneceu uma descrição para esta publicação."
             );
 
 
         explanationElement.textContent =
-            cleanExplanation;
-
+            explanation;
 
         descriptionElement.textContent =
-            cleanExplanation;
+            explanation;
 
 
-        // =================================================
-        // CRÉDITO
-        // =================================================
+        /* -----------------------------------------------
+           CRÉDITO
+        ------------------------------------------------ */
 
         const credit =
-            data.credit ||
-            data.copyright ||
-            "NASA";
+            cleanHTML(
+                data.credit ||
+                data.copyright ||
+                "NASA"
+            );
+
+
+        const finalCredit =
+            credit || "NASA";
 
 
         creditElement.textContent =
-            credit;
-
+            finalCredit;
 
         infoCreditElement.textContent =
-            credit;
+            finalCredit;
 
 
-        // =================================================
-        // LINK ORIGINAL
-        // =================================================
+        /* -----------------------------------------------
+           LINK NASA
+        ------------------------------------------------ */
 
         originalLink.href =
             data.permalink ||
             data.url ||
-            "#";
+            "https://science.nasa.gov/apod/";
 
 
-        // =================================================
-        // FRASE
-        // =================================================
+        /* -----------------------------------------------
+           FRASE
+        ------------------------------------------------ */
 
         quoteElement.textContent =
-            createQuote(
-                data.title
-            );
+            createQuote();
 
 
-        // =================================================
-        // TIPO DE MÍDIA
-        // =================================================
+        /* -----------------------------------------------
+           MÍDIA
+        ------------------------------------------------ */
 
         if (
-            data.media_type === "image" ||
-            data.image_url ||
-            data.hdurl
+            data.media_type === "image" &&
+            (
+                data.hdurl ||
+                data.url
+            )
         ) {
-
-
-            // =============================================
-            // URL DA IMAGEM
-            // =============================================
 
             const imageUrl =
                 data.hdurl ||
-                data.image_url ||
                 data.url;
 
-
-            if (!imageUrl) {
-
-                throw new Error(
-                    "A NASA não retornou uma URL de imagem."
-                );
-
-            }
-
-
-            // =============================================
-            // TEXTO ALTERNATIVO
-            // =============================================
 
             imageElement.alt =
                 data.alt ||
@@ -348,31 +318,36 @@ async function loadAPOD() {
                 "Imagem astronômica da NASA";
 
 
-            // =============================================
-            // CARREGAR IMAGEM
-            // =============================================
-
             imageElement.onload =
-                function () {
+                () => {
 
-                    loader.hidden = true;
+                    setLoading(false);
 
                     imageElement.classList.add(
                         "loaded"
                     );
-
                 };
 
 
             imageElement.onerror =
-                function () {
+                () => {
 
-                    loader.hidden = true;
+                    setLoading(false);
 
-                    throw new Error(
-                        "Não foi possível carregar a imagem."
+                    imageElement.classList.remove(
+                        "loaded"
                     );
 
+                    mediaNotice.hidden =
+                        false;
+
+                    mediaNotice.textContent =
+                        "Não foi possível carregar esta imagem. Clique em “Ver na NASA” para visualizar a publicação.";
+
+                    originalLink.href =
+                        data.permalink ||
+                        data.url ||
+                        "https://science.nasa.gov/apod/";
                 };
 
 
@@ -380,31 +355,15 @@ async function loadAPOD() {
                 imageUrl;
 
 
-            mediaNotice.hidden = true;
-
-
         } else {
 
+            setLoading(false);
 
-            // =============================================
-            // VÍDEO
-            // =============================================
-
-            imageElement.removeAttribute(
-                "src"
-            );
-
-            imageElement.classList.remove(
-                "loaded"
-            );
-
-            loader.hidden = true;
-
-            mediaNotice.hidden = false;
+            mediaNotice.hidden =
+                false;
 
             mediaNotice.textContent =
-                "O APOD de hoje é um vídeo. Clique em “Ver na NASA” para assistir.";
-
+                "O APOD de hoje é um vídeo ou outro tipo de mídia. Clique em “Ver na NASA” para visualizar.";
         }
 
 
@@ -415,66 +374,51 @@ async function loadAPOD() {
             error
         );
 
-
-        loader.hidden = true;
-
-        errorElement.hidden = false;
-
+        showError();
     }
-
 }
 
 
-// =====================================================
-// BOTÃO "DESCOBRIR MAIS"
-// =====================================================
-
-const scrollButton =
-    document.getElementById(
-        "scrollButton"
-    );
-
+/* =========================================================
+   SCROLL
+   ========================================================= */
 
 if (scrollButton) {
 
     scrollButton.addEventListener(
         "click",
-        function () {
+        () => {
 
             const details =
                 document.getElementById(
                     "details"
                 );
 
-
             if (details) {
 
                 details.scrollIntoView({
-                    behavior: "smooth"
+                    behavior: "smooth",
+                    block: "start"
                 });
-
             }
-
         }
     );
-
 }
 
 
-// =====================================================
-// DATA DO CABEÇALHO
-// =====================================================
+/* =========================================================
+   DATA DO HEADER
+   ========================================================= */
 
 if (currentDateElement) {
 
     currentDateElement.textContent =
         formatToday();
-
 }
 
 
-// =====================================================
-// INICIAR APLICAÇÃO
-// =====================================================
+/* =========================================================
+   INICIAR
+   ========================================================= */
 
 loadAPOD();
