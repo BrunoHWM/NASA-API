@@ -1,4 +1,4 @@
-# 🌌 NASA APOD
+# NASA APOD
 
 > Astronomy Picture of the Day — uma aplicação web que apresenta diariamente a imagem astronômica publicada pela NASA.
 
